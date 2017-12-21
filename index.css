@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "CMU Serif";
+    src: url("fonts/cmunrm.tff");
+}
+
 * {
 	box-sizing:border-box;
 	font-family:"CMU Serif";
