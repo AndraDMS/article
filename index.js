@@ -25,6 +25,7 @@ function reprintPages(page_) {
 }
 
 printPages(txt)
+setTimeout(function(){printPages(txt)},0)
 
 window.addEventListener("resize", function() {reprintPages(page)});
 
