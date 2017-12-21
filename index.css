@@ -1,11 +1,11 @@
 @font-face {
-    font-family: "CMU Serif";
-    src: url("fonts/cmunrm.tff");
+    font-family: "CMU Serif2";
+    src: url("fonts/cmunrm.ttf") format("truetype");
 }
 
 * {
 	box-sizing:border-box;
-	font-family:"CMU Serif";
+	font-family:"CMU Serif2";
   	text-align: justify;
   	text-justify: inter-word;
     -webkit-font-smoothing: antialiased !important;
