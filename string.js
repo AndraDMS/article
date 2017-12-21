@@ -74,6 +74,13 @@ String.prototype.starts = function (str) {
 	return false;
 }
 
+String.prototype.ends = function (str) {
+	if (this.substring(this.length-str.length) == str) {
+		return true;
+	}
+	return false;
+}
+
 String.prototype.fish = function (str) {
 	var r = this + str;
 	for (var i = 0; i < r.length; i++) {

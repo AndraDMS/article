@@ -201,7 +201,12 @@ function elem (txt, start, end, floodStart) {
 					break;
 				case "padding": 
 					var paddingVal = parseFloat(this.attr[attrs[i]]);
-					if (paddingVal) r.style.padding = paddingVal+"vh";
+					if (paddingVal) {
+						if (this.attr[attrs[i]].ends("vh")) r.style.padding = paddingVal+"vh";
+						else if (this.attr[attrs[i]].ends("%")) r.style.padding = paddingVal+"%";
+						else if (this.attr[attrs[i]].ends("px")) r.style.padding = paddingVal+"px";
+						else r.style.padding = paddingVal+"vh";
+					}
 					else r.style.padding = "0vh";
 					break;
 			}
@@ -387,7 +392,7 @@ var elemTypes = [{
 			}
 		},
 		attr: {
-			padding:"1",
+			padding:"15px",
 		},
 	}]
 
@@ -395,71 +400,3 @@ var defaultAttr = {
 	deplete:"word",
 	fontStyle:"normal"
 }
-
-/*function elem (start,type,txt) {
-	this.start = start;
-	this.type = type;
-	this.typeId = elemTypes.binSrch(this.type,function(a,b){return a>b},function(a){return a.type})
-	if (this.typeId == -1) {
-		this.typeId = elemTypes.binSrch("txt",function(a,b){return a>b},function(a){return a.type})
-	}
-	this.args = args;
-	this.txt = args.last();
-	this.children = [];
-
-	this.setChildren = function () {
-		var t = this.txt;
-		var slashes = t.findAll("/").f(function(a){return {slash:a, argStart:t.firstAfter(a,"{")}});
-		slashes = slashes.f(function(a){
-			a.type = t.substring(a.slash+1,a.argStart);
-			return a;
-		})
-		slashes = slashes.filter(function (a) {
-			return a.type.only("abcdefghijklmnopqrstuvwxyz")
-		})
-		slashes = slashes.f(function(a){
-			a.typeId = elemTypes.binSrch(a.type,function(a,b){return a>b},function(a){return a.type})
-			if (a.typeId == -1) {
-				a.typeId = elemTypes.binSrch("txt",function(a,b){return a>b},function(a){return a.type})
-			}
-			return a;
-		})
-		slashes.f(function(a){
-			var openCurls = t.findAll("{");
-			var closeCurls = t.findAll("}");
-			var arg1End = findPair(a.argStart, openCurls, closeCurls)
-			a.args = [new elemArg(t.substring(a.argStart+1,arg1End),a.argStart,arg1End)];
-			for (var i = 1; i < elemTypes(a.typeId).args; i++) {
-				var nextStart = t.firstAfter(a.args.last().end,"{")
-				var nextEnd = findPair(nextStart, openCurls, closeCurls);
-				a.args.push(new elemArg(t.substring(nextStart+1,nextEnd),nextStart,nextEnd)
-			}
-			return a;
-		/*
-			a.attrEnd = findPair(a.attrStart,t.findAll("{"),t.findAll("}"));
-			a.attrs = t.substring(a.attrStart+1,a.attrEnd)
-			a.txtStart = t.firstAfter(a.attrEnd,"{");
-			a.txtEnd = findPair(a.txtStart,t.findAll("{"),t.findAll("}"));
-			a.txt = t.substring(a.txtStart+1,a.txtEnd)
-			return a;
-		})
-		for (var i = 0; i < slashes.length-1; i++) {
-			//console.log(i,slashes)
-			if (slashes[i].args.last().end > slashes[i+1].slash) {
-				if (slashes[i].args.last().end < slashes[i+1].args.last().end) {
-					slashes = slashes.slice(0,i).concat(slashes.slice(i+1));
-				} else if (slashes[i].args.last().end >= slashes[i+1].args.last().end) {
-					slashes = slashes.slice(0,i+1).concat(slashes.slice(i+2));
-				}
-				if (i>=0) {i--}
-			}
-		}
-
-		console.log(slashes)
-	}
-	this.setChildren();
-
-	this.deplete = function () {
-
-	}
-}*/
