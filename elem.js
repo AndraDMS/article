@@ -134,7 +134,7 @@ function elem (txt, start, end, floodStart) {
 	this.raise = function (inherit) { // Supply inherited attributes to children
 		Object.mergePres(this.attr,inherit)
 		for (var i = 0; i < this.children.length; i++) {
-			this.children[i].raise(Object.clone(this.attr));
+			this.children[i].raise(this.attr);
 		}
 	}
 
@@ -172,14 +172,14 @@ function elem (txt, start, end, floodStart) {
 			}
 		}
 		var splitChild = this.children[splitChildNo].split(n);
-		var returns = [Object.clone(this),Object.clone(this)];
+		var returns = [split_Clone({},this),split_Clone({},this)];
 		if (splitChild.length == 1) {
 			//console.log(returns[0].children)
-			returns[0].children = returns[0].children.slice(0,splitChildNo);
-			returns[1].children = [splitChild[0]].concat(returns[1].children.slice(splitChildNo+1));
+			returns[0].children = this.children.slice(0,splitChildNo);
+			returns[1].children = [splitChild[0]].concat(this.children.slice(splitChildNo+1));
 		} else if (splitChild.length == 2) {
-			returns[0].children = returns[0].children.slice(0,splitChildNo).concat(splitChild[0]);
-			returns[1].children = [splitChild[1]].concat(returns[1].children.slice(splitChildNo+1));
+			returns[0].children = this.children.slice(0,splitChildNo).concat(splitChild[0]);
+			returns[1].children = [splitChild[1]].concat(this.children.slice(splitChildNo+1));
 		}
 
 		return returns;
@@ -308,7 +308,7 @@ var elemTypes = [{
 				var bestSplit = this.bestSplit();
 				var splits = this.split(bestSplit)
 				if (splits.length == 1) return splits;
-				splits[1].flood(0);
+				//splits[1].flood(0);
 				return [splits[0]].concat(splits[1].allSplits());
 
 			}

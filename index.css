@@ -53,12 +53,23 @@ body, html {
 .txtB {
 	width:90%;
 	height:90%;
-	background-color:white;
+	background-color:transparent;
 	display:inline-block;
 	margin-top:50vh;
 	transform:translateY(-50%);
 	font-size:20px;
+	color:white;
 }
 
 .txtE {
+}
+
+#progressBar {
+	height:1vh;
+	position:fixed;
+	bottom:0;
+	left:0;
+	width:0vw;
+	background-color:white;
+	opacity:0.2;
 }
