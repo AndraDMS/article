@@ -122,6 +122,31 @@ Array.prototype.min = function (f) {
 	return m;
 }
 
+Array.prototype.satisfy = function(f, after) {
+	var r = [];
+	if (!after) after = 0;
+	for (var i = after; i < this.length; i++) {
+		if (f(this[i])) r.push(i);
+	}
+	return r;
+}
+
+Array.prototype.firstAfter = function(after, f) {
+	if (!after) after = 0;
+	for (var i = after; i < this.length; i++) {
+		if (f(this[i])) return i;
+	}
+	return -1;
+}
+
+Array.prototype.firstBefore = function(before, f) {
+	if (!before) before = this.length-1;
+	for (var i = before; i >= 0; i--) {
+		if (f(this[i])) return i;
+	}
+	return -1;
+}
+
 function arrmerge(arr1,arr2,f) {
 	var rs = [];
 	var len = arr1.length+arr2.length

@@ -172,7 +172,7 @@ function elem (txt, start, end, floodStart) {
 			}
 		}
 		var splitChild = this.children[splitChildNo].split(n);
-		var returns = [split_Clone({},this),split_Clone({},this)];
+		var returns = [new splitClone(this),new splitClone(this)];
 		if (splitChild.length == 1) {
 			//console.log(returns[0].children)
 			returns[0].children = this.children.slice(0,splitChildNo);
@@ -209,6 +209,9 @@ function elem (txt, start, end, floodStart) {
 					}
 					else r.style.padding = "0vh";
 					break;
+				case "textAlignLast": 
+					if (this.attr[attrs[i]] == "justify") r.style.textAlignLast = "justify";
+					break;
 			}
 		}
 
@@ -225,6 +228,35 @@ function elem (txt, start, end, floodStart) {
 		return r;
 	}
 
+}
+
+function splitClone (obj) {
+	this.allSplits = obj.allSplits;
+	this.attr = Object.clone(obj.attr);
+	this.bestSplit = obj.bestSplit;
+	this.finalAlterElement = obj.finalAlterElement;
+	this.floodLength = obj.floodLength;
+	this.floodStart = obj.floodStart;
+	this.form = obj.form;
+	this.formElement = obj.formElement;
+	this.split = obj.split;
+	this.splitTest = obj.splitTest;
+	this.typeId = obj.typeId;
+}
+
+function splitClone_Def (obj) {
+	this.allSplits = obj.allSplits;
+	this.args = Object.clone(obj.args);
+	this.attr = Object.clone(obj.attr);
+	this.bestSplit = obj.bestSplit;
+	this.finalAlterElement = obj.finalAlterElement;
+	this.floodLength = obj.floodLength;
+	this.floodStart = obj.floodStart;
+	this.form = obj.form;
+	this.formElement = obj.formElement;
+	this.split = obj.split;
+	this.splitTest = obj.splitTest;
+	this.typeId = obj.typeId;
 }
 
 function elemArg(txt,start,end) {
@@ -306,6 +338,7 @@ var elemTypes = [{
 			this.allSplits = function () {
 
 				var bestSplit = this.bestSplit();
+				//console.log(bestSplit)
 				var splits = this.split(bestSplit)
 				if (splits.length == 1) return splits;
 				//splits[1].flood(0);
@@ -348,7 +381,7 @@ var elemTypes = [{
 					return [this];
 				}
 
-				var returns = [Object.clone(this),Object.clone(this)];
+				var returns = [new splitClone_Def(this),new splitClone_Def(this)];
 				if (this.attr.deplete == "letter") {
 					returns[0].args[0].txt = this.args[0].txt.substring(0,n-this.floodStart);
 					returns[1].args[0].txt = this.args[0].txt.substring(n-this.floodStart);
@@ -389,6 +422,34 @@ var elemTypes = [{
 				var r = document.createElement("DIV");
 				r.setAttribute("class","txtE");
 				return r;
+			}
+			this.split = function (n) {
+
+				if (n == this.floodStart || n >= this.floodStart + this.floodLength) {
+					return [this];
+				}
+
+				var splitChildNo = 0;
+				for (var i = 0; i < this.children.length; i++) {
+					if (this.children[i].floodStart <= n && n < this.children[i].floodStart + this.children[i].floodLength) {
+						//console.log(i)
+						splitChildNo = i;
+						break;
+					}
+				}
+				var splitChild = this.children[splitChildNo].split(n);
+				var returns = [split_Clone({},this),split_Clone({},this)];
+				if (splitChild.length == 1) {
+					//console.log(returns[0].children)
+					returns[0].children = this.children.slice(0,splitChildNo);
+					returns[1].children = [splitChild[0]].concat(this.children.slice(splitChildNo+1));
+				} else if (splitChild.length == 2) {
+					returns[0].children = this.children.slice(0,splitChildNo).concat(splitChild[0]);
+					returns[1].children = [splitChild[1]].concat(this.children.slice(splitChildNo+1));
+				}
+				returns[0].attr.textAlignLast = "justify";
+
+				return returns;
 			}
 		},
 		attr: {
