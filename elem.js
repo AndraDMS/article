@@ -199,6 +199,26 @@ function elem (txt, start, end, floodStart) {
 						default: r.style.fontStyle = "normal"; break;
 					}
 					break;
+				case "fontWeight": 
+					switch (this.attr[attrs[i]]) {
+						case "normal": r.style.fontWeight = "normal"; break;
+						case "bold": r.style.fontWeight = "bold"; break;
+						default: r.style.fontWeight = "normal"; break;
+					}
+					break;
+				case "fontSize": 
+					var val = parseFloat(this.attr[attrs[i]]);
+					if (val) {
+						if (this.attr[attrs[i]].ends("vh")) r.style.fontSize = val+"vh";
+						else if (this.attr[attrs[i]].ends("%")) r.style.fontSize = val+"%";
+						else if (this.attr[attrs[i]].ends("px")) r.style.fontSize = val+"px";
+						else r.style.fontSize = val+"vh";
+					}
+					else r.style.fontSize = "12px";
+					break;
+				case "fontColour": 
+					r.style.color = this.attr[attrs[i]];
+					break;
 				case "padding": 
 					var paddingVal = parseFloat(this.attr[attrs[i]]);
 					if (paddingVal) {
