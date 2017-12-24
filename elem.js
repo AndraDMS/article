@@ -143,7 +143,7 @@ function elem (txt, start, end, floodStart) {
 		var currFloodLength = 0;
 		if (this.attr.deplete == "element") {
 			for (var i = 0; i < this.children.length; i++) {
-				var add = this.children[i].flood(start);
+				//this.children[i].flood(start);
 			}
 			this.floodLength = 1;
 		} else {
@@ -159,7 +159,7 @@ function elem (txt, start, end, floodStart) {
 
 	this.split = function (n) {
 
-		if (n == this.floodStart || n >= this.floodStart + this.floodLength) {
+		if (n == this.floodStart || n >= this.floodStart + this.floodLength || this.attr.deplete == "element") {
 			return [this];
 		}
 
@@ -176,7 +176,7 @@ function elem (txt, start, end, floodStart) {
 		if (splitChild.length == 1) {
 			//console.log(returns[0].children)
 			returns[0].children = this.children.slice(0,splitChildNo);
-			returns[1].children = [splitChild[0]].concat(this.children.slice(splitChildNo+1));
+			returns[1].children = splitChild.concat(this.children.slice(splitChildNo+1));
 		} else if (splitChild.length == 2) {
 			returns[0].children = this.children.slice(0,splitChildNo).concat(splitChild[0]);
 			returns[1].children = [splitChild[1]].concat(this.children.slice(splitChildNo+1));
@@ -219,6 +219,9 @@ function elem (txt, start, end, floodStart) {
 				case "fontColour": 
 					r.style.color = this.attr[attrs[i]];
 					break;
+				case "colour": 
+					r.style.backgroundColor = this.attr[attrs[i]];
+					break;
 				case "padding": 
 					var paddingVal = parseFloat(this.attr[attrs[i]]);
 					if (paddingVal) {
@@ -228,6 +231,46 @@ function elem (txt, start, end, floodStart) {
 						else r.style.padding = paddingVal+"vh";
 					}
 					else r.style.padding = "0vh";
+					break;
+				case "paddingLeft": 
+					var paddingVal = parseFloat(this.attr[attrs[i]]);
+					if (paddingVal) {
+						if (this.attr[attrs[i]].ends("vh")) r.style.paddingLeft = paddingVal+"vh";
+						else if (this.attr[attrs[i]].ends("%")) r.style.paddingLeft = paddingVal+"%";
+						else if (this.attr[attrs[i]].ends("px")) r.style.paddingLeft = paddingVal+"px";
+						else r.style.paddingLeft = paddingVal+"vh";
+					}
+					else r.style.paddingLeft = "0vh";
+					break;
+				case "paddingTop": 
+					var paddingVal = parseFloat(this.attr[attrs[i]]);
+					if (paddingVal) {
+						if (this.attr[attrs[i]].ends("vh")) r.style.paddingTop = paddingVal+"vh";
+						else if (this.attr[attrs[i]].ends("%")) r.style.paddingTop = paddingVal+"%";
+						else if (this.attr[attrs[i]].ends("px")) r.style.paddingTop = paddingVal+"px";
+						else r.style.paddingTop = paddingVal+"vh";
+					}
+					else r.style.paddingTop = "0vh";
+					break;
+				case "paddingRight": 
+					var paddingVal = parseFloat(this.attr[attrs[i]]);
+					if (paddingVal) {
+						if (this.attr[attrs[i]].ends("vh")) r.style.paddingRight = paddingVal+"vh";
+						else if (this.attr[attrs[i]].ends("%")) r.style.paddingRight = paddingVal+"%";
+						else if (this.attr[attrs[i]].ends("px")) r.style.paddingRight = paddingVal+"px";
+						else r.style.paddingRight = paddingVal+"vh";
+					}
+					else r.style.paddingRight = "0vh";
+					break;
+				case "paddingBottom": 
+					var paddingVal = parseFloat(this.attr[attrs[i]]);
+					if (paddingVal) {
+						if (this.attr[attrs[i]].ends("vh")) r.style.paddingBottom = paddingVal+"vh";
+						else if (this.attr[attrs[i]].ends("%")) r.style.paddingBottom = paddingVal+"%";
+						else if (this.attr[attrs[i]].ends("px")) r.style.paddingBottom = paddingVal+"px";
+						else r.style.paddingBottom = paddingVal+"vh";
+					}
+					else r.style.paddingBottom = "0vh";
 					break;
 				case "textAlignLast": 
 					if (this.attr[attrs[i]] == "justify") r.style.textAlignLast = "justify";
@@ -255,6 +298,7 @@ function splitClone (obj) {
 	this.attr = Object.clone(obj.attr);
 	this.bestSplit = obj.bestSplit;
 	this.finalAlterElement = obj.finalAlterElement;
+	this.flood = obj.flood;
 	this.floodLength = obj.floodLength;
 	this.floodStart = obj.floodStart;
 	this.form = obj.form;
@@ -270,6 +314,7 @@ function splitClone_Def (obj) {
 	this.attr = Object.clone(obj.attr);
 	this.bestSplit = obj.bestSplit;
 	this.finalAlterElement = obj.finalAlterElement;
+	this.flood = obj.flood;
 	this.floodLength = obj.floodLength;
 	this.floodStart = obj.floodStart;
 	this.form = obj.form;
@@ -299,8 +344,12 @@ var elemTypes = [{
 				for (var i = 0; i < attrsKeys.length; i++) {
 					switch (attrsKeys[i]) {
 						case "width": 
-							var widthVal = parseFloat(attrs[attrsKeys[i]]);
-							r.style.width = (widthVal-5)+"vh";
+							var val = parseFloat(attrs[attrsKeys[i]]);
+							r.style.width = (val)+"vh";
+							break;
+						case "paddingTop": 
+							var val = parseFloat(attrs[attrsKeys[i]]);
+							r.style.height = (100-val)+"vh";
 							break;
 					}
 				}
@@ -316,9 +365,13 @@ var elemTypes = [{
 					switch (attrsKeys[i]) {
 						case "width": 
 							var widthVal = parseFloat(attrs[attrsKeys[i]]);
-							r.style.width = widthVal+"vh";
-							r.style.marginBottom = (widthVal-100)+"vh";
-							r.style.transform = "translateX(" + -1*(widthVal-100)+ "vh) translateY(" + widthVal + "vh) rotate(90deg)";
+							var paddingVal = parseFloat(attrs.paddingSide);
+							r.style.width = (widthVal+paddingVal)+"vh";
+							r.style.marginBottom = (widthVal+paddingVal-100)+"vh";
+							r.style.transform = "translateX(" + -1*(widthVal+paddingVal-100)+ "vh) translateY(" + (widthVal+paddingVal) + "vh) rotate(90deg)";
+							break;
+						case "colour": 
+							r.style.backgroundColor = attrs[attrsKeys[i]];
 							break;
 					}
 				}
@@ -348,10 +401,10 @@ var elemTypes = [{
 						upb = middle;
 					}
 					middle = Math.floor((lowb+upb)/2);
-					if (middle == lowb) break;
+					if (middle == lowb || lowb == upb) break;
 				}
 
-				this.splitTest(middle)
+				//this.splitTest(middle)
 				return middle;
 			}
 
@@ -361,13 +414,16 @@ var elemTypes = [{
 				//console.log(bestSplit)
 				var splits = this.split(bestSplit)
 				if (splits.length == 1) return splits;
-				//splits[1].flood(0);
+				console.log(splits[1])
+				splits[1].flood(0);
 				return [splits[0]].concat(splits[1].allSplits());
 
 			}
 		},
 		attr: {
-			width:"90"
+			width:"90",
+			paddingTop:"2.5",
+			paddingSide:"5",
 		},
 	},{
 		type: "body",
@@ -375,7 +431,7 @@ var elemTypes = [{
 		attrApplier: function() {
 			this.setAttrs(0)
 			this.setChildren(this.args.length-1);
-			this.raise(Object.mergePres(this.attr,defaultAttr));
+			//this.raise(Object.mergePres(this.attr,defaultAttr));
 			this.flood(0);
 			this.formElement = function () {
 				return document.createElement("DIV");
@@ -409,7 +465,7 @@ var elemTypes = [{
 					var words = this.args[0].txt.split(" ").filter(function (a) {return a!=""})
 					returns[0].args[0].txt = words.slice(0,n-this.floodStart).concatStrs(" ");
 					returns[1].args[0].txt = words.slice(n-this.floodStart).concatStrs(" ");
-				}
+				} 
 
 				return returns;
 			}
@@ -418,6 +474,32 @@ var elemTypes = [{
 			}
 		},
 		attr: {
+		},
+	},{
+		type: "img",
+		args: 1,
+		attrApplier: function() {
+			this.setAttrs(0)
+			this.formElement = function () {
+				var r = document.createElement("DIV");
+				if (this.attr.source) r.style.backgroundImage = "url(" + this.attr.source + ")";
+				r.style.backgroundSize = "cover";
+				r.style.backgroundPosition = "center";
+				if (this.attr.height) {
+					r.style.height = this.attr.height;
+					if (!this.attr.width) r.style.height = this.attr.height;
+					
+				}
+				if (this.attr.width) r.style.width = this.attr.width;
+				return r;
+			}
+			this.finalAlterElement = function(e, attrs) {
+				//e.style.height = "auto";
+				return e;
+			}
+		},
+		attr: {
+			deplete:"element",
 		},
 	},{
 		type: "span",
@@ -436,8 +518,9 @@ var elemTypes = [{
 		type: "txt",
 		args: 2,
 		attrApplier: function() {
-			this.setAttrs(0)
+			this.setAttrs(0);
 			this.setChildren(this.args.length-1);
+			this.raise(Object.mergePres(this.attr,defaultAttr));
 			this.formElement = function () {
 				var r = document.createElement("DIV");
 				r.setAttribute("class","txtE");
@@ -473,7 +556,8 @@ var elemTypes = [{
 			}
 		},
 		attr: {
-			padding:"15px",
+			padding:"2vh",
+			deplete:"word"
 		},
 	}]
 

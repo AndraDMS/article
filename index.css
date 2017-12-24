@@ -20,7 +20,7 @@ body, html {
 }
 
 #wrap, #wrap_Test {
-	padding: 2.5vh 0;
+	padding: 0;
 	width:100vh;
 	height:100vw;
 	min-height:100vh;
@@ -77,4 +77,9 @@ body, html {
 	width:0vw;
 	background-color:white;
 	opacity:0.2;
+}
+
+img {
+	font-size:0;
+	inline-size: 15vh;
 }

@@ -66,7 +66,7 @@ function split_Clone(t, s){ // Overwrites existing values
       return t;
   }
 
-  var validKeys = ["allSplits","attr","bestSplit","finalAlterElement","floodLength","floodStart","form","formElement","split","splitTest","typeId"];
+  var validKeys = ["allSplits","attr","bestSplit","finalAlterElement","flood","floodLength","floodStart","form","formElement","split","splitTest","typeId"];
   // Loop through source's own enumerable properties
   Object.keys(s).forEach(function(key) {
     // Get the value
@@ -97,7 +97,7 @@ function splitDef_Clone(t, s){ // Overwrites existing values
       return t;
   }
 
-  var validKeys = ["allSplits","args","attr","bestSplit","finalAlterElement","floodLength","floodStart","form","formElement","split","splitTest","typeId"];
+  var validKeys = ["allSplits","args","attr","bestSplit","finalAlterElement","flood","floodLength","floodStart","form","formElement","split","splitTest","typeId"];
   // Loop through source's own enumerable properties
   Object.keys(s).forEach(function(key) {
     // Get the value
