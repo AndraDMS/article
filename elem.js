@@ -414,7 +414,7 @@ var elemTypes = [{
 				//console.log(bestSplit)
 				var splits = this.split(bestSplit)
 				if (splits.length == 1) return splits;
-				console.log(splits[1])
+				//console.log(splits[1])
 				splits[1].flood(0);
 				return [splits[0]].concat(splits[1].allSplits());
 
